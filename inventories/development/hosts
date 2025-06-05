@@ -1,0 +1,26 @@
+[web]
+192.168.86.136
+192.168.86.137
+
+[web:vars]
+ansible_user=gio
+ansible_ssh_pass=2025
+ansible_become=true
+ansible_become_method=sudo
+ansible_become_user=root
+
+[masters]
+192.168.86.136
+
+[workers]
+192.168.86.137
+
+[k8s-nodes]
+192.168.86.136 ansible_user=gio
+192.168.86.137 ansible_user=gio
+
+
+[kubernetes:children]
+masters
+workers
+

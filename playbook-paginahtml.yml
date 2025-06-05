@@ -1,0 +1,9 @@
+---
+- name: Crear página HTML de bienvenida
+  hosts: nodos
+  become: false
+  tasks:
+    - name: Crear archivo HTML con mensaje de bienvenida
+      copy:
+        content: "<html><body><h1>\"Bienvenido a Ansible\"</h1></body></html>"
+        dest: /home/gio/bienvenida.html

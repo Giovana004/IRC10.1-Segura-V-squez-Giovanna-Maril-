@@ -1,0 +1,5 @@
+
+[web]
+192.168.86.136 ansible_user=gio
+192.168.86.137 ansible_user=gio
+

@@ -1,0 +1,20 @@
+---
+- name: Instalar Apache
+  become: true
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+
+- name: Asegurar que Apache esté iniciado y habilitado
+  become: true
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Crear archivo index.html
+  become: true
+  ansible.builtin.copy:
+    dest: /var/www/html/index.html
+    content: "<html><body><h1>Bienvenido a Ansible</h1></body></html>"
+    mode: '0644'

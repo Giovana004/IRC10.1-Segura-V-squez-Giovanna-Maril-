@@ -1,0 +1,6 @@
+---
+- name: Instalar Kubernetes en los nodos
+  hosts: all
+  become: yes
+  roles:
+    - kubernetes

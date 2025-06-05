@@ -1,0 +1,7 @@
+# playbook-kubernetes.yml
+- name: Instalar Kubernetes en nodos
+  hosts: all
+  become: yes
+  roles:
+    - kubernetes
+

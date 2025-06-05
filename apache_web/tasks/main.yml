@@ -1,0 +1,19 @@
+---
+- name: Instalar Apache (httpd)
+  yum:
+    name: httpd
+    state: present
+
+- name: Copiar página HTML a directorio web
+  copy:
+    content: "<html><body><h1>\"Bienvenido a Ansible con Roles\"</h1></body></html>"
+    dest: /var/www/html/bienvenida.html
+    owner: root
+    group: root
+    mode: '0644'
+- name: Instalar Apache (httpd)
+  yum:
+    name: httpd
+    state: present
+  notify: reiniciar apache
+

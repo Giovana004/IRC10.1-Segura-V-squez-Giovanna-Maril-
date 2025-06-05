@@ -1,0 +1,8 @@
+---
+- name: Desplegar Apache usando role
+  hosts: web
+  become: yes
+
+  roles:
+    - apache
+

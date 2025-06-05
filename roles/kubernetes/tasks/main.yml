@@ -1,0 +1,73 @@
+---
+
+- name: Desactivar swap temporalmente
+  become: true
+  ansible.builtin.command: swapoff -a
+
+- name: Comentar swap en /etc/fstab para desactivar permanentemente
+  become: true
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*\s+swap\s+)'
+    replace: '#\1'
+
+- name: Instalar dependencias necesarias
+  become: true
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - curl
+    state: present
+
+- name: Agregar repositorio de Docker
+  become: true
+  ansible.builtin.yum_repository:
+    name: docker
+    description: Docker Repo
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: Instalar Docker
+  become: true
+  ansible.builtin.yum:
+    name: docker-ce
+    state: present
+
+- name: Habilitar e iniciar Docker
+  become: true
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Agregar repositorio oficial de Kubernetes
+  become: true
+  ansible.builtin.yum_repository:
+    name: kubernetes
+    description: Kubernetes Repository
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+    metadata_expire: 1h
+
+- name: Instalar kubeadm, kubelet y kubectl
+  become: true
+  ansible.builtin.yum:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    disable_excludes: kubernetes
+
+- name: Habilitar kubelet
+  become: true
+  ansible.builtin.service:
+    name: kubelet
+    enabled: yes
+

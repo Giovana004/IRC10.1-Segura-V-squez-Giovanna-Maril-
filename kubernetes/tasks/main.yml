@@ -1,0 +1,74 @@
+---
+
+# 1. Instalar herramientas básicas
+- name: Instalar herramientas necesarias
+  become: true
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - curl
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+# 2. Agregar repositorio de Docker
+- name: Agregar repositorio de Docker
+  become: true
+  ansible.builtin.yum_repository:
+    name: docker
+    description: Docker Repository
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+# 3. Instalar Docker
+- name: Instalar Docker
+  become: true
+  ansible.builtin.yum:
+    name: docker-ce
+    state: present
+
+# 4. Habilitar e iniciar Docker
+- name: Habilitar e iniciar Docker
+  become: true
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+    state: started
+
+#5
+- name: Agregar repositorio de Kubernetes (URL final corregida)
+  become: true
+  ansible.builtin.yum_repository:
+    name: kubernetes
+    description: Kubernetes YUM repository
+    baseurl: https://pkgs.k8s.io/yum/repos/kubernetes-el7-x86_64
+    enabled: yes
+    gpgcheck: 1
+    repo_gpgcheck: 1
+    gpgkey: https://pkgs.k8s.io/keys/endpoint-privileged.gpg
+
+
+# 6. Limpiar caché de yum/dnf
+- name: Limpiar caché del sistema
+  become: true
+  ansible.builtin.command: dnf clean all
+
+# 7. Instalar kubeadm, kubelet y kubectl
+- name: Instalar kubeadm, kubelet y kubectl
+  become: true
+  ansible.builtin.yum:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+
+# 8. Habilitar kubelet
+- name: Habilitar e iniciar kubelet
+  become: true
+  ansible.builtin.service:
+    name: kubelet
+    enabled: yes
+    state: started
+

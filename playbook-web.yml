@@ -1,0 +1,23 @@
+---
+- name: Instalar y configurar Apache para servir página HTML
+  hosts: nodos
+  become: true   # Necesitamos privilegios para instalar y copiar en /var/www/html
+  tasks:
+    - name: Instalar Apache (httpd)
+      yum:
+        name: httpd
+        state: present
+
+    - name: Copiar página HTML a directorio web
+      copy:
+        content: "<html><body><h1>\"Bienvenido a Ansible\"</h1></body></html>"
+        dest: /var/www/html/bienvenida.html
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Iniciar y habilitar servicio httpd
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
